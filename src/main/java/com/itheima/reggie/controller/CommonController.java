@@ -2,6 +2,7 @@ package com.itheima.reggie.controller;
 
 import com.itheima.reggie.common.R;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.io.FilenameUtils;
 import org.apache.commons.io.IOUtils;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -16,6 +17,7 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.util.UUID;
 
 /**
  * @Description: test
@@ -37,14 +39,13 @@ public class CommonController {
      * @return
      */
     @PostMapping("/upload")
-    public R upload(MultipartFile file) {
+    public R upload(MultipartFile file) throws IOException {
         String filename = file.getOriginalFilename();
-        try {
-            file.transferTo(new File(basePath + filename));
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-        return R.success(filename);
+        //生成随机id 防止id重复
+        String name = UUID.randomUUID().toString() + "." + FilenameUtils.getExtension(filename);
+        //保存文件
+        file.transferTo(new File(basePath + name));
+        return R.success(name);
     }
 
 
@@ -56,10 +57,11 @@ public class CommonController {
      * @return
      */
     @GetMapping("/download")
-    public void download(String name, HttpServletResponse response) throws IOException {
+    public R download(String name, HttpServletResponse response) throws IOException {
         FileInputStream fis = new FileInputStream(new File(basePath + name));
         ServletOutputStream os = response.getOutputStream();
         IOUtils.copy(fis, os);
+        return R.success("bingo");
     }
 
 

@@ -1,5 +1,6 @@
 package com.itheima.reggie.controller;
 
+import com.baomidou.mybatisplus.core.conditions.Wrapper;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
@@ -13,6 +14,8 @@ import com.itheima.reggie.service.SetMealService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 /**
  * @Description: test
@@ -84,6 +87,16 @@ public class CategoryController {
         }
         categoryService.removeById(id);
         return R.success("删除成功");
+    }
+
+    @GetMapping("/list")
+    public R<List<Category>> list(Category category) {
+        QueryWrapper<Category> qw = new QueryWrapper<>();
+        qw.eq("type", category.getType());
+        qw.orderByAsc("sort").orderByDesc("update_time");
+        List<Category> list = categoryService.list(qw);
+        return R.success(list);
+
     }
 }
 
