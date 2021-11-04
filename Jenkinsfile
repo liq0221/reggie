@@ -70,6 +70,7 @@ pipeline{
                         withCredentials([usernamePassword(credentialsId: 'aliyun-docker-repo', passwordVariable: 'ali_pwd', usernameVariable: 'ali_user')]) {
                             // some block
                              sh "docker login -u ${ali_user} -p ${ali_pwd}   registry.cn-hangzhou.aliyuncs.com"
+                             sh "docker tag reggie registry.cn-hangzhou.aliyuncs.com/leeq/reggie:${APP_VER}"
                         }
                 }
 				sh "docker push registry.cn-hangzhou.aliyuncs.com/leeq/reggie:${APP_VER}"
