@@ -19,7 +19,7 @@ pipeline{
                sh "echo $hello"
                //未来，凡是需要取变量值的时候，都用双引号
                sh 'echo ${world}'
-               sh "end...."
+               sh "end......."
             }
 		}
 	 }
