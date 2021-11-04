@@ -7,6 +7,6 @@ echo 'Asia/Shanghai' >/etc/timezone; \
 touch /app/app.jar;
 
 EXPOSE 8080
-VOLUMN cupload1
+VOLUME cupload1
 
 ENTRYPOINT [ "sh", "-c", "java -jar /app/app.jar" ]
