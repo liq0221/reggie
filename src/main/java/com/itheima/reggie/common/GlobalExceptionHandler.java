@@ -17,11 +17,22 @@ import org.springframework.web.bind.annotation.RestController;
 public class GlobalExceptionHandler {
     /**
      * 异常处理方法
+     *
      * @return
      */
     @ExceptionHandler({Exception.class})
-    public R<String> exceptionHandler(Exception e){
+    public R<String> exceptionHandler(Exception e) {
+        e.printStackTrace();
         log.error(e.getMessage());
         return R.error("服务器错误");
     }
- }
+
+    @ExceptionHandler({CommonException.class})
+    public R<String> exceptionHandler(CommonException e) {
+        e.printStackTrace();
+        log.error(e.getMessage());
+        return R.error(e.getMessage());
+    }
+
+
+}

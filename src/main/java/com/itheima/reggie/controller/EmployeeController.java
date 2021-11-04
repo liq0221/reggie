@@ -120,6 +120,12 @@ public class EmployeeController {
         return R.success(res);
     }
 
+    /**
+     * 修改员工信息
+     * @param employee
+     * @param session
+     * @return
+     */
     @PutMapping
     public R update(@RequestBody Employee employee, HttpSession session) {
         //获取当前账户的ID

@@ -9,9 +9,9 @@ import java.util.List;
 
 @Data
 public class DishDto extends Dish {
-
+    //口味
     private List<DishFlavor> flavors = new ArrayList<>();
-
+    //菜品名称
     private String categoryName;
 
     private Integer copies;

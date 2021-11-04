@@ -33,6 +33,11 @@ public class CategoryController {
     @Autowired
     SetMealService setMealService;
 
+    @PutMapping
+    public R update(@RequestBody Category category){
+        categoryService.updateById(category);
+        return R.success("修改成功");
+    }
     /**
      * 新增分类
      *
@@ -46,6 +51,12 @@ public class CategoryController {
     }
 
 
+    /**
+     * 菜品种类分页查询
+     * @param page
+     * @param pageSize
+     * @return
+     */
     @GetMapping("/page")
     public R page(int page, int pageSize) {
         //分页选择器
@@ -59,6 +70,11 @@ public class CategoryController {
 
     }
 
+    /**
+     * 删除套餐
+     * @param id
+     * @return
+     */
     @DeleteMapping
     public R delete(Long id) {
         QueryWrapper<Category> qw = new QueryWrapper<>();
@@ -89,6 +105,11 @@ public class CategoryController {
         return R.success("删除成功");
     }
 
+    /**
+     * 查询菜品种类(下拉列表)
+     * @param category
+     * @return
+     */
     @GetMapping("/list")
     public R<List<Category>> list(Category category) {
         QueryWrapper<Category> qw = new QueryWrapper<>();

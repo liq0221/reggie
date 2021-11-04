@@ -1,12 +1,14 @@
 package com.itheima.reggie.controller;
 
 import com.baomidou.mybatisplus.core.conditions.Wrapper;
+import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.itheima.reggie.common.R;
 import com.itheima.reggie.dto.DishDto;
 import com.itheima.reggie.pojo.Category;
 import com.itheima.reggie.pojo.Dish;
+import com.itheima.reggie.pojo.DishFlavor;
 import com.itheima.reggie.service.CategoryService;
 import com.itheima.reggie.service.DishFlavorService;
 import com.itheima.reggie.service.DishService;
@@ -15,6 +17,7 @@ import org.apache.commons.lang.StringUtils;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
+import sun.net.idn.Punycode;
 
 import java.util.List;
 import java.util.stream.Collectors;
@@ -35,8 +38,32 @@ public class DishController {
     @Autowired
     private CategoryService categoryService;
 
+    @PostMapping("/status/{status}")
+    public R changeStatus(@PathVariable("status") Integer status,@RequestParam List<Long> ids){
+
+        if(status == 1){
+            QueryWrapper<Dish> qw = new QueryWrapper<>();
+            qw.in("id",ids);
+            List<Dish> dishes = dishService.list(qw);
+
+        }
+
+
+        return R.success("成功");
+    }
     /**
-     * 分页查询
+     * 删除菜品
+     * @param ids
+     * @return
+     */
+    @DeleteMapping
+    public R delete(@RequestParam List<Long> ids){
+        dishService.removeByIds(ids);
+        return R.success("删除成功");
+    }
+    /**
+     * 菜品分页查询
+     *
      * @param page
      * @param pageSize
      * @param name
@@ -68,11 +95,67 @@ public class DishController {
         return R.success(result);
     }
 
+    /**
+     * 添加菜品
+     * @param dishDto
+     * @return
+     */
     @PostMapping
-    public R save(@RequestBody DishDto dishDto){
+    public R save(@RequestBody DishDto dishDto) {
         dishService.saveWithFlavor(dishDto);
         return R.success("菜品添加成功");
     }
+
+
+    /**
+     * 根据id查找菜品信息
+     *
+     * @param id
+     * @return
+     */
+    @GetMapping("/{id}")
+    public R getById(@PathVariable("id") Long id) {
+        Dish dish = dishService.getById(id);
+        DishDto dishDto = new DishDto();
+        BeanUtils.copyProperties(dish, dishDto);
+
+        //查询口味
+        LambdaQueryWrapper<DishFlavor> qw = new LambdaQueryWrapper<>();
+        qw.eq(DishFlavor::getDishId, dish.getId());
+        List<DishFlavor> flavors = dishFlavorService.list(qw);
+        dishDto.setFlavors(flavors);
+        return R.success(dishDto);
+    }
+
+    /**
+     * 修改
+     * @param dishDto
+     * @return
+     */
+    @PutMapping
+    public R update(@RequestBody DishDto dishDto) {
+        dishService.updateWithFlavor(dishDto);
+        return R.success("成功");
+    }
+
+
+    /**
+     * 套餐查询菜品种类
+     * @param dish
+     * @return
+     */
+    @GetMapping("/list")
+    public R<List<Dish>> list(Dish dish) {
+        LambdaQueryWrapper<Dish> qw = new LambdaQueryWrapper<>();
+        qw.eq(dish.getCategoryId() != null, Dish::getCategoryId, dish.getCategoryId());
+
+//      qw.eq(StringUtils.isNotEmpty(dish.getCategoryId().toString()), Dish::getCategoryId, dish.getCategoryId());
+
+        qw.orderByAsc(Dish::getSort).orderByDesc(Dish::getUpdateTime);
+        List<Dish> list = dishService.list(qw);
+        return R.success(list);
+    }
+
 
 }
 
