@@ -11,7 +11,7 @@ pipeline{
 		stage('环境检查'){
 			steps {
                sh 'printenv'
-               echo "正在检测基本信息"
+               echo "正在检测基本信息....."
                sh 'java -version'
                sh 'git --version'
                sh 'docker version'
