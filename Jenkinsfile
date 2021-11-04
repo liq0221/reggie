@@ -16,9 +16,6 @@ pipeline{
                sh 'git --version'
                sh 'docker version'
                sh 'pwd && ls -alh'
-               sh "echo $hello"
-               //未来，凡是需要取变量值的时候，都用双引号
-               sh 'echo ${world}'
                sh "echo end......"
             }
 		}
