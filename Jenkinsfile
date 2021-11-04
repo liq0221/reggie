@@ -3,7 +3,7 @@ pipeline{
 	 agent any
 	 
 	 environment {
-		 WS=${WORKSPACE}
+		 WS="${WORKSPACE}"
 		 ALIYUN_SECRTE=credentials("aliyun-docker-repo")
 	 }
 	 
