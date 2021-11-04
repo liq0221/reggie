@@ -3,8 +3,8 @@ pipeline{
 	 agent any
 	 
 	 environment {
-		 hello = "123456"
-	     world = "456789"
+		 WS=${WORKSPACE}
+		 ALIYUN_SECRTE=credentials("aliyun-docker-repo")
 	 }
 	 
 	 stages {
@@ -32,18 +32,52 @@ pipeline{
                  }
             }
             steps {
-               //git下载来的代码目录下
                sh 'pwd && ls -alh'
                sh 'mvn -v'
-               //打包，jar.。默认是从maven中央仓库下载。 jenkins目录+容器目录；-s指定容器内位置
-               //只要jenkins迁移，不会对我们产生任何影响
                sh "echo 默认的工作目录：${WS}"
-               //每一行指令都是基于当前环境信息。和上下指令无关
                sh 'cd ${WS} && mvn clean package -s "/var/jenkins_home/appconfig/maven/settings.xml"  -Dmaven.test.skip=true '
-               //jar包推送给maven repo ，nexus
-               //如何让他适用阿里云镜像源
 
             }
         }
+		
+		stage('生成镜像'){
+            steps {
+                echo "打包..."
+                //检查Jenkins的docker命令是否能运行
+                sh 'docker version'
+                sh 'pwd && ls -alh'
+                sh 'docker build -t reggie .'
+
+                //镜像就可以进行保存
+
+
+            }
+        }
+		
+		stage('推送镜像'){
+		
+             input {
+                 message "需要推送远程镜像吗?"
+                 ok "需要"
+                 parameters {
+                     string(name: 'APP_VER', defaultValue: 'v1.0', description: '需要推送的版本')
+                 }
+             }
+
+
+             steps {
+
+                echo "$APP_VER"
+				
+                script {
+                        withCredentials([usernamePassword(credentialsId: 'aliyun-docker-repo', passwordVariable: 'ali_pwd', usernameVariable: 'ali_user')]) {
+                            // some block
+                             sh "docker login -u ${ali_user} -p ${ali_pwd}   registry.cn-hangzhou.aliyuncs.com"
+                        }
+                }
+				sh "docker push registry.cn-hangzhou.aliyuncs.com/leeq/reggie:${APP_VER}"
+
+             }
+         }
 	 }
 }
