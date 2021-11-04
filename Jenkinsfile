@@ -11,7 +11,7 @@ pipeline{
 		stage('环境检查'){
 			steps {
                sh 'printenv'
-               echo "正在检测基本信息....."
+               echo "正在检测基本信息......."
                sh 'java -version'
                sh 'git --version'
                sh 'docker version'
@@ -19,7 +19,7 @@ pipeline{
                sh "echo $hello"
                //未来，凡是需要取变量值的时候，都用双引号
                sh 'echo ${world}'
-               sh "end......."
+               sh "end........."
             }
 		}
 	 }
