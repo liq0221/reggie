@@ -18,4 +18,3 @@ mybatis-plus:
     db-config:
       id-type: ASSIGN_ID
 savePath: D:\黑马学习资料\04-项目一瑞吉点餐\04-项目一瑞吉点餐\项目课程\资料\图片资源\
-
