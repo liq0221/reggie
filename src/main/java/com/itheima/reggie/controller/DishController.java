@@ -17,7 +17,6 @@ import org.apache.commons.lang.StringUtils;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
-import sun.net.idn.Punycode;
 
 import java.util.List;
 import java.util.stream.Collectors;
