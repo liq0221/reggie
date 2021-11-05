@@ -17,7 +17,6 @@ import org.apache.commons.lang.StringUtils;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
-import sun.net.idn.Punycode;
 
 import java.util.List;
 import java.util.stream.Collectors;
@@ -38,29 +37,38 @@ public class DishController {
     @Autowired
     private CategoryService categoryService;
 
+    /**
+     * 起售状态修改(未完成)
+     *
+     * @param status
+     * @param ids
+     * @return
+     */
     @PostMapping("/status/{status}")
-    public R changeStatus(@PathVariable("status") Integer status,@RequestParam List<Long> ids){
+    public R changeStatus(@PathVariable("status") Integer status, @RequestParam List<Long> ids) {
 
-        if(status == 1){
+        if (status == 1) {
             QueryWrapper<Dish> qw = new QueryWrapper<>();
-            qw.in("id",ids);
+            qw.in("id", ids);
             List<Dish> dishes = dishService.list(qw);
 
         }
 
-
         return R.success("成功");
     }
+
     /**
      * 删除菜品
+     *
      * @param ids
      * @return
      */
     @DeleteMapping
-    public R delete(@RequestParam List<Long> ids){
+    public R delete(@RequestParam List<Long> ids) {
         dishService.removeByIds(ids);
         return R.success("删除成功");
     }
+
     /**
      * 菜品分页查询
      *
@@ -97,6 +105,7 @@ public class DishController {
 
     /**
      * 添加菜品
+     *
      * @param dishDto
      * @return
      */
@@ -129,6 +138,7 @@ public class DishController {
 
     /**
      * 修改
+     *
      * @param dishDto
      * @return
      */
@@ -141,6 +151,7 @@ public class DishController {
 
     /**
      * 套餐查询菜品种类
+     *
      * @param dish
      * @return
      */
@@ -148,12 +159,40 @@ public class DishController {
     public R<List<Dish>> list(Dish dish) {
         LambdaQueryWrapper<Dish> qw = new LambdaQueryWrapper<>();
         qw.eq(dish.getCategoryId() != null, Dish::getCategoryId, dish.getCategoryId());
-
 //      qw.eq(StringUtils.isNotEmpty(dish.getCategoryId().toString()), Dish::getCategoryId, dish.getCategoryId());
-
         qw.orderByAsc(Dish::getSort).orderByDesc(Dish::getUpdateTime);
         List<Dish> list = dishService.list(qw);
-        return R.success(list);
+
+        //将list中的dish换成dishDto
+        List<Dish> dishDtoList = list.stream().map((dish1) -> {
+            DishDto dishDto = new DishDto();
+            BeanUtils.copyProperties(dish1, dishDto);
+
+            //获取菜品种类id
+            Long categoryId = dish1.getCategoryId();
+
+            //获取菜品种类
+            Category category = categoryService.getById(categoryId);
+
+            //判断菜品种类是否存在
+            if (category != null) {
+                String categoryName = category.getName();
+                dishDto.setCategoryName(categoryName);
+            }
+
+            Long id = dish1.getId();
+            QueryWrapper<DishFlavor> qw1 = new QueryWrapper<>();
+            qw1.eq("dish_id", id);
+
+            // 根据菜品id 获取相应菜品口味
+            List<DishFlavor> dishFlavorList = dishFlavorService.list(qw1);
+
+            // 设置菜品的口味
+            dishDto.setFlavors(dishFlavorList);
+
+            return dishDto;
+        }).collect(Collectors.toList());
+        return R.success(dishDtoList);
     }
 
 

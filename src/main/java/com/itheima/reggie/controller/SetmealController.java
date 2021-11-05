@@ -1,5 +1,6 @@
 package com.itheima.reggie.controller;
 
+import com.baomidou.mybatisplus.core.conditions.Wrapper;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
@@ -33,6 +34,16 @@ public class SetmealController {
     @Autowired
     private CategoryService categoryService;
 
+    @GetMapping("/list")
+    public R list(Setmeal setmeal) {
+        //条件构造器
+        QueryWrapper<Setmeal> qw = new QueryWrapper<>();
+        qw.eq(setmeal.getCategoryId() != null, "category_id", setmeal.getCategoryId());
+        //获取符合条件的套餐
+        List<Setmeal> list = setmealService.list(qw);
+        return R.success(list);
+    }
+
     /**
      * 新增套餐功能
      *
@@ -47,6 +58,7 @@ public class SetmealController {
 
     /**
      * 套餐分页查询
+     *
      * @param page
      * @param pageSize
      * @param name
@@ -64,7 +76,7 @@ public class SetmealController {
         List<Setmeal> collect = result.getRecords().stream().map((setmeal) -> {
             //拷贝对象
             SetmealDto setmealDto = new SetmealDto();
-            BeanUtils.copyProperties(setmeal,setmealDto);
+            BeanUtils.copyProperties(setmeal, setmealDto);
             //获取菜品种类
             Long categoryId = setmeal.getCategoryId();
             Category category = categoryService.getById(categoryId);
@@ -79,7 +91,7 @@ public class SetmealController {
     }
 
     @DeleteMapping
-    public R delete(@RequestParam List<Long> ids){
+    public R delete(@RequestParam List<Long> ids) {
         setmealService.deleteWithDish(ids);
         return R.success("删除成功");
     }

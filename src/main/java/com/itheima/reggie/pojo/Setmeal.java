@@ -24,6 +24,7 @@ public class Setmeal implements Serializable {
 
 
     //分类id
+    @JsonSerialize(using = ToStringSerializer.class)
     private Long categoryId;
 
 
