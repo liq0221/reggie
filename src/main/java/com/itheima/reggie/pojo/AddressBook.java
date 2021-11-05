@@ -1,21 +1,18 @@
 package com.itheima.reggie.pojo;
 
 import com.baomidou.mybatisplus.annotation.FieldFill;
-import com.baomidou.mybatisplus.annotation.IdType;
 import com.baomidou.mybatisplus.annotation.TableField;
-import com.baomidou.mybatisplus.annotation.TableId;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import com.fasterxml.jackson.databind.ser.std.ToStringSerializer;
 import lombok.Data;
 import java.io.Serializable;
-import java.math.BigDecimal;
 import java.time.LocalDateTime;
 
 /**
- * 套餐
+ * 地址簿
  */
 @Data
-public class Setmeal implements Serializable {
+public class AddressBook implements Serializable {
 
     private static final long serialVersionUID = 1L;
 
@@ -23,48 +20,77 @@ public class Setmeal implements Serializable {
     private Long id;
 
 
-    //分类id
+    //用户id
     @JsonSerialize(using = ToStringSerializer.class)
-    private Long categoryId;
+    private Long userId;
 
 
-    //套餐名称
-    private String name;
+    //收货人
+    private String consignee;
 
 
-    //套餐价格
-    private BigDecimal price;
+    //手机号
+    private String phone;
 
 
-    //状态 0:停用 1:启用
-    private Integer status;
+    //性别 0 女 1 男
+    private String sex;
 
 
-    //编码
-    private String code;
+    //省级区划编号
+    private String provinceCode;
 
 
-    //描述信息
-    private String description;
+    //省级名称
+    private String provinceName;
 
 
-    //图片
-    private String image;
+    //市级区划编号
+    private String cityCode;
 
 
+    //市级名称
+    private String cityName;
+
+
+    //区级区划编号
+    private String districtCode;
+
+
+    //区级名称
+    private String districtName;
+
+
+    //详细地址
+    private String detail;
+
+
+    //标签
+    private String label;
+
+    //是否默认 0 否 1是
+    private Integer isDefault;
+
+    //创建时间
     @TableField(fill = FieldFill.INSERT)
     private LocalDateTime createTime;
 
 
+    //更新时间
     @TableField(fill = FieldFill.INSERT_UPDATE)
     private LocalDateTime updateTime;
 
 
+    //创建人
     @TableField(fill = FieldFill.INSERT)
     private Long createUser;
 
 
+    //修改人
     @TableField(fill = FieldFill.INSERT_UPDATE)
     private Long updateUser;
 
+
+    //是否删除
+    private Integer isDeleted;
 }

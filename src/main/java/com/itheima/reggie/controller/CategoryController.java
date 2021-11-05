@@ -34,10 +34,11 @@ public class CategoryController {
     SetMealService setMealService;
 
     @PutMapping
-    public R update(@RequestBody Category category){
+    public R update(@RequestBody Category category) {
         categoryService.updateById(category);
         return R.success("修改成功");
     }
+
     /**
      * 新增分类
      *
@@ -53,6 +54,7 @@ public class CategoryController {
 
     /**
      * 菜品种类分页查询
+     *
      * @param page
      * @param pageSize
      * @return
@@ -72,6 +74,7 @@ public class CategoryController {
 
     /**
      * 删除套餐
+     *
      * @param id
      * @return
      */
@@ -107,13 +110,14 @@ public class CategoryController {
 
     /**
      * 查询菜品种类(下拉列表)
+     *
      * @param category
      * @return
      */
     @GetMapping("/list")
     public R<List<Category>> list(Category category) {
         QueryWrapper<Category> qw = new QueryWrapper<>();
-        qw.eq("type", category.getType());
+        qw.eq(category.getType() != null, "type", category.getType());
         qw.orderByAsc("sort").orderByDesc("update_time");
         List<Category> list = categoryService.list(qw);
         return R.success(list);
