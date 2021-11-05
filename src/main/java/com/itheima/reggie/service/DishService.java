@@ -10,5 +10,8 @@ import com.itheima.reggie.pojo.Dish;
  * @Date:2021/11/1 19:14
  */
 public interface DishService extends IService<Dish> {
-    public void saveWithFlavor(DishDto dishDto);
+    //新增菜品和口味
+    void saveWithFlavor(DishDto dishDto);
+    //修改菜品和口味
+    void updateWithFlavor(DishDto dishDto);
 }
