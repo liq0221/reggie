@@ -1,5 +1,6 @@
 package com.itheima.reggie.common;
 
+import com.itheima.reggie.pojo.User;
 import lombok.Data;
 import java.util.HashMap;
 import java.util.Map;
@@ -28,6 +29,7 @@ public class R<T> {
         r.code = 0;
         return r;
     }
+
 
     public R<T> add(String key, Object value) {
         this.map.put(key, value);

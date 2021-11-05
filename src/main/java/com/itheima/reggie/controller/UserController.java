@@ -48,13 +48,14 @@ public class UserController {
             log.info("code = {}", code);
 
             session.setAttribute(phone, code);
-            return R.success("验证码发送成功");
+            return R.success("验证码发送成功" + code);
         }
         return R.error("验证码发送失败");
     }
 
     /**
      * 登录
+     *
      * @param session
      * @param map
      * @return
@@ -63,8 +64,8 @@ public class UserController {
     public R login(HttpSession session, @RequestBody Map<String, String> map) {
         String code = map.get("code");
         String phone = map.get("phone");
-        String sessionCode = (String) session.getAttribute(phone);
-        if (sessionCode == null && !code.equals(sessionCode)) {
+        Object sessionCode = session.getAttribute(phone);
+        if (sessionCode == null || !sessionCode.equals(code)) {
             return R.error("登录失败");
         }
         //移除session中的sessionCode
