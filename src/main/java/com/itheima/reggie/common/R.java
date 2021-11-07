@@ -1,7 +1,7 @@
 package com.itheima.reggie.common;
 
-import com.itheima.reggie.pojo.User;
 import lombok.Data;
+
 import java.util.HashMap;
 import java.util.Map;
 

@@ -1,11 +1,9 @@
 package com.itheima.reggie.controller;
 
-import com.baomidou.mybatisplus.core.conditions.Wrapper;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.itheima.reggie.common.R;
 import com.itheima.reggie.pojo.User;
 import com.itheima.reggie.service.UserService;
-import com.itheima.reggie.utils.SendSms;
 import com.itheima.reggie.utils.ValidateCodeUtils;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang.StringUtils;
