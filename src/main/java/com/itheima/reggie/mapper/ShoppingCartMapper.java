@@ -1,7 +1,7 @@
 package com.itheima.reggie.mapper;
 
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
-import com.itheima.reggie.pojo.User;
+import com.itheima.reggie.pojo.ShoppingCart;
 import org.apache.ibatis.annotations.Mapper;
 
 /**
@@ -10,6 +10,6 @@ import org.apache.ibatis.annotations.Mapper;
  * @Date:2021/11/1 15:18
  */
 @Mapper
-public interface UserMapper extends BaseMapper<User> {
+public interface ShoppingCartMapper extends BaseMapper<ShoppingCart> {
 
 }

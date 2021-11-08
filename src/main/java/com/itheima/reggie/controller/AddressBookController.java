@@ -24,6 +24,29 @@ public class AddressBookController {
     private AddressBookService addressBookService;
 
     /**
+     * 删除地址
+     * @param ids
+     * @return
+     */
+    @DeleteMapping
+    public R deleteById(@RequestParam List<Long> ids) {
+        addressBookService.removeByIds(ids);
+        return R.success("删除成功");
+    }
+
+    /**
+     * 修改地址
+     *
+     * @param addressBook
+     * @return
+     */
+    @PutMapping
+    public R updateAddressBook(@RequestBody AddressBook addressBook) {
+        addressBookService.updateById(addressBook);
+        return R.success("修改成功");
+    }
+
+    /**
      * 新增
      */
     @PostMapping
