@@ -1,6 +1,5 @@
 package com.itheima.reggie.service.impl;
 
-import com.baomidou.mybatisplus.core.conditions.Wrapper;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.toolkit.IdWorker;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
@@ -9,12 +8,10 @@ import com.itheima.reggie.mapper.OrderMapper;
 import com.itheima.reggie.pojo.*;
 import com.itheima.reggie.service.*;
 import org.springframework.beans.BeanUtils;
-import org.springframework.beans.factory.BeanFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.io.Serializable;
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.List;
@@ -74,12 +71,14 @@ public class OrderServiceImpl extends ServiceImpl<OrderMapper, Orders> implement
         save(orders);
 
         //将购物车的信息拷贝到订单明细表中
-        OrderDetail orderDetail = new OrderDetail();
+
         for (ShoppingCart shoppingCart : list) {
+            OrderDetail orderDetail = new OrderDetail();
             BeanUtils.copyProperties(shoppingCart, orderDetail);
+            orderDetail.setOrderId(orders.getId());
+            orderDetailService.save(orderDetail);
         }
-        orderDetail.setOrderId(orders.getId());
-        orderDetailService.save(orderDetail);
+
         //清空购物车数据
         shoppingCartService.remove(qw);
 
