@@ -6,6 +6,7 @@ pipeline{
 		 WS="${WORKSPACE}"
 		 ALIYUN_SECRTE=credentials("aliyun-docker-repo")
 		 SERVER=credentials("ServiceServer")
+		 ALIYUN_USER=credentials("aliyun-account")
 	 }
 	 
 	 stages {
@@ -80,19 +81,28 @@ pipeline{
          }
 		 
 		  stage('部署镜像'){
+		  
+			input {
+                 message "需要部署镜像的版本?"
+                 ok "需要"
+                 parameters {
+                     string(name: 'PUSH_APP_VER', defaultValue: 'v1.0', description: '需要部署镜像的版本')
+                 }
+             }
             steps {  
 					
 				  echo "部署镜像..."
+				  
 				  script {
 					  def sshServer = getServer()
-					  
-					  sshCommand remote: sshServer, command: "./deploy-push-image.sh v1.6 reggie-v6 reggie red0635 lq390635"
+					  withCredentials([usernamePassword(credentialsId: 'aliyun-account', passwordVariable: 'password', usernameVariable: 'userName')]) {
+						sshCommand remote: sshServer, command: "./deploy-push-image.sh ${PUSH_APP_VER} reggie-${PUSH_APP_VER} reggie ${userName} ${password}"
+					  }
 				  }
             }
 		}
 		
 	 }
-	 
 }
 
 def getServer(){
