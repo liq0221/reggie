@@ -91,7 +91,8 @@ pipeline{
 		}
 		
 	 }
-	 def getServer(){
+}
+def getServer(){
 		def remote = [:]
 		remote.name = "server"
 		remote.host = "152.136.16.45"
@@ -103,4 +104,3 @@ pipeline{
 		}
 		return remote
 	}
-}
