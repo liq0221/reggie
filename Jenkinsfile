@@ -89,17 +89,18 @@ pipeline{
                   sshCommand remote: sshServer, command: "./deploy-push-image.sh v1.6 reggie-v6 reggie red0635 lq390635"
             }
 		}
-		def getServer(){
-			def remote = [:]
-			remote.name = "server"
-			remote.host = "152.136.16.45"
-			remote.port = 22
-			remote.allowAnyHosts = true
-			withCredentials([usernamePassword(credentialsId: 'ServiceServer', passwordVariable: 'password', usernameVariable: 'userName')]) {
-				remote.user = "${userName}"
-				remote.password = "${password}"
-			}
-			return remote
-		}
+		
 	 }
+	 def getServer(){
+		def remote = [:]
+		remote.name = "server"
+		remote.host = "152.136.16.45"
+		remote.port = 22
+		remote.allowAnyHosts = true
+		withCredentials([usernamePassword(credentialsId: 'ServiceServer', passwordVariable: 'password', usernameVariable: 'userName')]) {
+			remote.user = "${userName}"
+			remote.password = "${password}"
+		}
+		return remote
+	}
 }
