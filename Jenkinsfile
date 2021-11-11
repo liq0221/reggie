@@ -84,7 +84,7 @@ pipeline{
 		  
 			input {
                  message "需要部署镜像的版本?"
-                 ok "需要"
+                 ok "部署"
                  parameters {
                      string(name: 'PUSH_APP_VER', defaultValue: 'v1.0', description: '需要部署镜像的版本')
                  }
