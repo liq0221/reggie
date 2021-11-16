@@ -12,6 +12,8 @@ import com.itheima.reggie.service.SetMealService;
 import com.itheima.reggie.service.SetmealDishService;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cache.annotation.CacheEvict;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -34,6 +36,7 @@ public class SetmealController {
     private CategoryService categoryService;
 
     @GetMapping("/list")
+    @Cacheable (value = "setmealCache",key = "#setmeal.categoryId")
     public R list(Setmeal setmeal) {
         //条件构造器
         QueryWrapper<Setmeal> qw = new QueryWrapper<>();
@@ -50,6 +53,7 @@ public class SetmealController {
      * @return
      */
     @PostMapping
+    @CacheEvict(value = "setmealCache",allEntries = true) //清除setmealCache名称下,所有的缓存数据
     public R save(@RequestBody SetmealDto setmealDto) {
         setmealService.saveWithDish(setmealDto);
         return R.success("成功");
@@ -90,6 +94,7 @@ public class SetmealController {
     }
 
     @DeleteMapping
+    @CacheEvict(value = "setmealCache",allEntries = true) //清除setmealCache名称下,所有的缓存数据
     public R delete(@RequestParam List<Long> ids) {
         setmealService.deleteWithDish(ids);
         return R.success("删除成功");
